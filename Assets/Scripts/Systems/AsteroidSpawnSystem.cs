@@ -23,10 +23,10 @@ public class AsteroidSpawnSystem : SystemBase
     protected override void OnCreate()
     {
         asteroidQuery = GetEntityQuery(ComponentType.ReadWrite<AsteroidTag>());
-        //when we create the system we get the querr for all entities with an asteroid tag
+        //when we create the system we get the query for all entities with an asteroid tag
 
         m_BeginSimECB = World.GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-        //and a handle for the world Command Buffer System
+        // Find the ECB system once and store it for later usage
     }
 
     protected override void OnUpdate()

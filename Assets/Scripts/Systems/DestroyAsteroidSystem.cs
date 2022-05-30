@@ -13,7 +13,7 @@ public class DestroyAsteroidSystem : SystemBase
     private BeginSimulationEntityCommandBufferSystem m_BeginSimECB;
 
     private EndSimulationEntityCommandBufferSystem m_EndSimulationEcbSystem;
-    //and well need command buffers on the star of every frame and on the end of every frame 
+    //and well need command buffers on the star and end of every frame 
 
 
 
@@ -43,7 +43,7 @@ public class DestroyAsteroidSystem : SystemBase
 
         var mediumAsteroidPrefab = m_MediumAsteroidPrefab;
         var smallAsteroidPrefab = m_SmallAsteroidPrefab;
-        //creating variables for use inside the ECS system
+        //creating variables for use inside the lambda expression
         var commandBuffer = m_BeginSimECB.CreateCommandBuffer().AsParallelWriter();
         var ecb = m_EndSimulationEcbSystem.CreateCommandBuffer().AsParallelWriter();
         // and new command buffers as paralel wirters for the beggin and end of every frame 

@@ -15,6 +15,7 @@ public class PlayerTeleportSystem : SystemBase
 
 
         var random = new Unity.Mathematics.Random((uint)Stopwatch.GetTimestamp());
+        //storing a handle for using random library, initialized with current time so we get a different random initializaton each frame
 
 
 
@@ -23,11 +24,19 @@ public class PlayerTeleportSystem : SystemBase
             ForEach((ref Translation translation, ref PhysicsVelocity vel, ref Movable mov) => {
                 if (mov.teleport == true)
                 {
-                    mov.teleport = false;
+                //if the PlayerInputSystem has flagged the player to teleport
+
                     translation.Value.y = random.NextFloat(-5f,5f);
                     translation.Value.x = random.NextFloat(-5f, 5f);
+                    //then we generate a random position inside the world borders
+
                     vel.Linear.xyz -= vel.Linear.xyz;
+                    //and we stop the player, so is doesnt carry its velocity when he teleports
+                    mov.teleport = false;
+                    //finally we unflag the teleport
                 }
-        }).ScheduleParallel();
+            }).ScheduleParallel();
+        //Scheduling for paralel worker threads
+
     }
 }

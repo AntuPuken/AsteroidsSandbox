@@ -8,9 +8,11 @@ using UnityEngine;
 
 public class WorldBordersRespawnSystem : SystemBase
 {
-    
+    private float sideBuffer = 0.5f; 
     protected override void OnUpdate()
     {
+
+        var SideBuffer = sideBuffer;
         var cam = Camera.main;
         var bottomLeft = (Vector2)cam.ScreenToWorldPoint(new Vector3(0, 0, cam.nearClipPlane));
         var topLeft = (Vector2)cam.ScreenToWorldPoint(new Vector3(0, cam.pixelHeight, cam.nearClipPlane));
@@ -20,32 +22,39 @@ public class WorldBordersRespawnSystem : SystemBase
         float2 bottomL = (float2)bottomLeft;
         float2 topL = (float2)topLeft;
         float2 topR = (float2)topRight;
+       //Getting screen borders
+        
         float dt = Time.DeltaTime;
+        //and elapsed time since last frame
+        
         Entities.
              WithAny<PlayerTag>().
               WithAny<AsteroidTag>().
                 WithAny<BulletTag>().
                 WithAny<EnemyTag>().
              ForEach((ref Translation translation) => {
-            if(translation.Value.x < topL.x - 0.5f)
-                {
-                    translation.Value = new float3(topR.x + 0.5f, translation.Value.y, translation.Value.z);
-                }
-            if (translation.Value.x > topR.x + 0.5f)
-                {
-                    translation.Value = new float3(topL.x - 0.5f, translation.Value.y, translation.Value.z);
-                }
-                if (translation.Value.y > topL.y + 0.5f)
+                 //if the current entity is outside the screen borders
+                 if(translation.Value.x < topL.x - SideBuffer)
                  {
-                     translation.Value = new float3(translation.Value.x, bottomL.y - 0.5f, translation.Value.z);
+                     //teleport it to the opposite border 
+                     translation.Value = new float3(topR.x + SideBuffer, translation.Value.y, translation.Value.z);
                  }
-               if (translation.Value.y <  bottomL.y - 0.5f)
+                 if (translation.Value.x > topR.x + SideBuffer)
                  {
-                     translation.Value = new float3(translation.Value.x, topR.y + 0.5f, translation.Value.z);
+                    translation.Value = new float3(topL.x - SideBuffer, translation.Value.y, translation.Value.z);
+                 }
+                 if (translation.Value.y > topL.y + SideBuffer)
+                 {
+                     translation.Value = new float3(translation.Value.x, bottomL.y - SideBuffer, translation.Value.z);
+                 }
+                 if (translation.Value.y <  bottomL.y - SideBuffer)
+                 {
+                     translation.Value = new float3(translation.Value.x, topR.y + SideBuffer, translation.Value.z);
                  }
 
-                 // float3 pos = Camera.main.WorldToViewportPoint(translation.Value);
              }).ScheduleParallel();
+             //Scheduling for paralel worker threads
+
     }
 
 }

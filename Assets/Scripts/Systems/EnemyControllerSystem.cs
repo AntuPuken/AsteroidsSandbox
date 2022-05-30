@@ -98,8 +98,8 @@ public class EnemyControllerSystem : SystemBase
 
     }
 
-    //Auxiliary function for facing direction according to current rotation and a direction vector
 
+    //Auxiliary function for facing direction according to current rotation and a direction vector
     private static void FaceDirection(ref Rotation rot, float3 moveData)
     {
         float angle = math.atan2(moveData.y, moveData.x);
